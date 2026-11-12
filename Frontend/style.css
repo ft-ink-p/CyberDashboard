@@ -1,6 +1,6 @@
 :root {
     --bg-base: #04070a;
-    --tile-bg: rgba(7, 12, 18, 0.78);
+    --tile-bg: rgba(7, 12, 18, 0.82);
     --border-cyan: #1e6b7b;
     --neon-cyan: #00f0ff;
     --neon-green: #00ff66;
@@ -14,39 +14,61 @@
     padding: 0;
 }
 
+/* Habilitamos el scroll vertical clásico */
 body {
-    height: 100vh;
-    width: 100vw;
-    overflow: hidden;
+    min-height: 100vh;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
     font-family: 'Consolas', 'Courier New', monospace;
     color: var(--text-main);
     background-color: var(--bg-base);
-    /* Fondo cyberpunk generado por CSS (cables/resplandor verde y cyan) */
     background-image:
-        radial-gradient(circle at 28% 45%, rgba(0, 255, 102, 0.18) 0%, transparent 42%),
-        radial-gradient(circle at 75% 60%, rgba(0, 240, 255, 0.14) 0%, transparent 45%),
+        radial-gradient(circle at 28% 45%, rgba(0, 255, 102, 0.16) 0%, transparent 45%),
+        radial-gradient(circle at 75% 60%, rgba(0, 240, 255, 0.12) 0%, transparent 45%),
         linear-gradient(rgba(0, 255, 102, 0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
     background-size: 100% 100%, 100% 100%, 28px 28px, 28px 28px;
+    background-attachment: fixed; /* El fondo se queda quieto al bajar */
 
-    /* Estructura vertical: Barra top + Workspace + Barra bottom */
-    display: grid;
-    grid-template-rows: 26px 1fr 26px;
+    display: flex;
+    flex-direction: column;
 }
 
-/* --- BARRAS SUPERIOR E INFERIOR --- */
+/* Scrollbar personalizada estilo Cyberpunk */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #03060a;
+}
+::-webkit-scrollbar-thumb {
+    background: #1e6b7b;
+    border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--neon-cyan);
+}
+
+/* --- BARRAS SUPERIOR E INFERIOR (Fijas al hacer scroll) --- */
 .status-bar {
-    background: rgba(3, 6, 10, 0.92);
+    height: 28px;
+    background: rgba(3, 6, 10, 0.95);
     border-bottom: 1px solid #132c36;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 12px;
+    padding: 0 14px;
     font-size: 0.78rem;
     letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 .bottom-bar {
+    top: auto;
+    bottom: 0;
     border-bottom: none;
     border-top: 1px solid #132c36;
 }
@@ -79,50 +101,46 @@ body {
     border-bottom: 2px solid var(--neon-cyan);
 }
 
-/* --- ÁREA DE TRABAJO PRINCIPAL --- */
+/* --- ÁREA DE TRABAJO PRINCIPAL (Crece hacia abajo) --- */
 .workspace {
+    flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 10px;
-    min-height: 0;
+    gap: 14px;
+    padding: 14px;
+    align-items: start;
 }
 
-/* --- COLUMNA IZQUIERDA (Monitores) --- */
+/* --- COLUMNA IZQUIERDA --- */
 .col-left {
-    display: grid;
-    grid-template-rows: 1.1fr 0.85fr 1.65fr;
-    gap: 8px;
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .row-mid {
     display: grid;
     grid-template-columns: 0.85fr 1.15fr;
-    gap: 8px;
-    min-height: 0;
+    gap: 12px;
 }
 
 .row-bottom {
     display: grid;
     grid-template-columns: 0.9fr 1.1fr;
-    gap: 8px;
-    min-height: 0;
+    gap: 12px;
 }
 
 .subcol-sensors {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    gap: 8px;
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* --- COLUMNA DERECHA (Terminal + Reloj) --- */
+/* --- COLUMNA DERECHA --- */
 .col-right {
-    display: grid;
-    grid-template-rows: 1.25fr 0.75fr;
-    gap: 10px;
-    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* --- ESTILO DE LOS RECUADROS (TILES) --- */
@@ -130,11 +148,10 @@ body {
     background: var(--tile-bg);
     backdrop-filter: blur(4px);
     border: 1px solid var(--border-cyan);
-    padding: 8px 12px;
+    padding: 12px 14px;
     display: flex;
     flex-direction: column;
-    min-width: 0;
-    min-height: 0;
+    min-height: 200px; /* Altura mínima cómoda para que no se aplasten */
     transition: border-color 0.2s ease;
 }
 
@@ -142,9 +159,23 @@ body {
     border-color: var(--neon-cyan);
 }
 
+/* Alturas específicas para los módulos grandes */
+#widget-cpu {
+    min-height: 200px;
+}
+
+#widget-processes {
+    min-height: 322px; /* Iguala la altura de Clima + Pacman juntos */
+}
+
+.terminal-tile {
+    min-height: 365px;
+    border-color: #1c3b47;
+}
+
 fieldset.tile legend {
     color: var(--neon-cyan);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     padding: 0 6px;
     font-weight: bold;
 }
@@ -154,20 +185,15 @@ fieldset.tile legend {
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
 }
 
 .placeholder-text {
     color: var(--text-dim);
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     text-align: center;
 }
 
 /* --- TERMINAL DERECHA --- */
-.terminal-tile {
-    border-color: #1c3b47;
-}
-
 .terminal-prompt {
     font-size: 0.85rem;
     margin-bottom: 10px;
@@ -180,25 +206,54 @@ fieldset.tile legend {
     font-weight: bold;
 }
 
-/* --- RELOJ GIGANTE DERECHA --- */
+/* --- RELOJ ANALÓGICO + DIGITAL DERECHA --- */
 .clock-tile {
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 40px;
+    min-height: 300px;
     border-color: #1c3b47;
 }
 
+#analog-clock {
+    filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.25));
+}
+
+.clock-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
 .big-time {
-    font-size: clamp(3.5rem, 7vw, 6.5rem);
+    font-size: 2.5rem;
     font-weight: 900;
     color: #ffffff;
-    letter-spacing: 6px;
-    line-height: 1;
-    text-shadow: 0 0 18px rgba(0, 240, 255, 0.35);
+    letter-spacing: 3px;
+    line-height: 1.1;
+    text-shadow: 0 0 12px rgba(0, 240, 255, 0.4);
 }
 
 .big-date {
-    margin-top: 10px;
-    font-size: 0.95rem;
+    margin-top: 6px;
+    font-size: 0.88rem;
+    color: var(--neon-cyan);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.location-weather {
+    margin-top: 8px;
+    font-size: 0.8rem;
+    color: var(--neon-green);
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.location-weather .separator {
     color: var(--text-dim);
-    letter-spacing: 2px;
 }

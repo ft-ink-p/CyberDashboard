@@ -94,10 +94,18 @@
             </div>
 
             <!-- Fila 2: Reloj Digital Gigante -->
-            <div class="tile clock-tile" id="widget-clock">
-                <div class="big-time" id="clock-hours">23:56</div>
-                <div class="big-date" id="clock-date">Jue Nov 12</div>
-            </div>
+         <div class="tile clock-tile" id="widget-clock">
+      <canvas id="analog-clock" width="190" height="190"></canvas>
+    <div class="clock-info">
+        <div class="big-time" id="clock-hours">00:00:00</div>
+        <div class="big-date" id="clock-date">CARGANDO FECHA...</div>
+        <div class="location-weather">
+            <span id="clock-location">📍 CARTAGENA, COLOMBIA</span>
+            <span class="separator">//</span>
+            <span id="clock-weather">🌡 --°C</span>
+        </div>
+    </div>
+</div>
 
         </section>
 
@@ -118,7 +126,6 @@
             <span>🌃</span>
         </div>
     </footer>
-
     <script type="module" src="Main.js"></script>
 </body>
 </html>
