@@ -3,20 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEXUS // Cyber_Dashboard</title>
+    <title>CyberOS // Tiling Dashboard</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="cyber-panel">
-        <h1>[ SYS.NEXUS_OVERRIDE ]</h1>
-        <div class="data-stream">
-            <p>CORE_TEMP___: <span id="temp" class="value">--</span> °C</p>
-            <p>NET_STATUS__: <span id="status" class="value">--</span></p>
-            <p>PROXIES_____: <span id="proxies" class="value">--</span></p>
-        </div>
-        <div class="scan-line"></div>
-    </div>
 
-    <script src="Main.js"></script>
+    <!-- BARRA SUPERIOR -->
+    <header class="status-bar top-bar">
+        <div class="bar-left">
+            <span class="badge-user">ft-ink-p@CyberWered@!~</span>
+        </div>
+        <div class="bar-right">
+            <span>VOL 85%</span>
+            <span>NET: 何を探してるんだ、兄弟？</span>
+            <span>ES</span>
+            <span id="mini-clock">00:00</span>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL DIVIDIDA EN 2 COLUMNAS ASIMÉTRICAS -->
+    <main class="workspace">
+
+        <!-- MITAD IZQUIERDA: Monitores estilo TUI -->
+        <section class="col-left">
+
+            <!-- Fila 1: Notas -->
+            <fieldset class="tile" id="widget-cpu">
+                <legend>Notas</legend>
+                <div class="tile-content placeholder-text">
+                    [ Módulo Notas ]
+                </div>
+            </fieldset>
+
+            <!-- Fila 2: Noticias y foto anime -->
+            <div class="row-mid">
+                <fieldset class="tile" id="widget-disk">
+                    <legend>Noticias</legend>
+                    <div class="tile-content placeholder-text">
+                        [ Modulo de Noticias]
+                    </div>
+                </fieldset>
+
+                <fieldset class="tile" id="widget-ram">
+                    <legend> >__< </legend>
+                    <div class="tile-content placeholder-text">
+                        [ Foto Anime ]
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Fila 3: Sensores + Red (izquierda) y Procesos (derecha) -->
+            <div class="row-bottom">
+                <div class="subcol-sensors">
+                    <fieldset class="tile" id="widget-temp">
+                        <legend>Clima</legend>
+                        <div class="tile-content placeholder-text">
+                            [ Sensores °C ]
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="tile" id="widget-net">
+                        <legend>Pacman</legend>
+                        <div class="tile-content placeholder-text">
+                            [ Animacion de pacman ]
+                        </div>
+                    </fieldset>
+                </div>
+                    <!--Grafica interactiva del peso colombiano -->
+                <fieldset class="tile" id="widget-processes">
+                    <legend>Grafica</legend>
+                    <div class="tile-content placeholder-text">
+                        [ Grafica ]
+                    </div>
+                </fieldset>
+            </div>
+
+        </section>
+
+        <!-- MITAD DERECHA: Terminal Neofetch + Reloj Gigante -->
+        <section class="col-right">
+
+            <!-- Fila 1: Consola Neofetch -->
+            <div class="tile terminal-tile" id="widget-terminal">
+                <div class="terminal-prompt">
+                    <span class="prompt-user">by_Ink_dev</span>:~$ neofetch :b
+                </div>
+                <div class="tile-content placeholder-text">
+                    [ Aquí irá el Arte ASCII + Especificaciones del Sistema ]
+                </div>
+            </div>
+
+            <!-- Fila 2: Reloj Digital Gigante -->
+            <div class="tile clock-tile" id="widget-clock">
+                <div class="big-time" id="clock-hours">23:56</div>
+                <div class="big-date" id="clock-date">Jue Nov 12</div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- BARRA INFERIOR -->
+    <footer class="status-bar bottom-bar">
+        <div class="bar-left workspaces">
+            <span class="ws active">1</span>
+            <span class="ws">2</span>
+            <span class="ws">3</span>
+            <span class="ws">4</span>
+        </div>
+        <div class="bar-right">
+            <span>🎱</span>
+            <span>🎧</span>
+            <span>🚬</span>
+            <span>🌃</span>
+        </div>
+    </footer>
+
+    <script type="module" src="Main.js"></script>
 </body>
 </html>
