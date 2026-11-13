@@ -1,0 +1,13 @@
+# Entornos virtuales y caché de Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Configuración interna de PyCharm / JetBrains
+.idea/
+
+# Archivos del sistema operativo
+Thumbs.db
+Desktop.ini
+.DS_Store
