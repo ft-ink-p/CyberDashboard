@@ -38,39 +38,34 @@ export class NewsWidget {
     }
 
     async fetchFeeds() {
-        const [animeResult, devResult] = await Promise.allSettled([
-            this.fetchWithTimeout('https://api.jikan.moe/v4/seasons/now?limit=4'),
-            this.fetchWithTimeout('https://dev.to/api/articles?per_page=4&top=7')
-        ]);
+        // Consultamos artículos populares de programación, tecnología y ciencia de Dev.to
+        const devResult = await this.fetchWithTimeout('https://dev.to/api/articles?per_page=6&top=1');
 
-        const animeItems = animeResult.status === 'fulfilled' && animeResult.value.data
-            ? animeResult.value.data.map(item => ({
-                category: 'ANIME // MAL',
-                type: 'anime',
-                title: `${item.title} ${item.score ? `★ ${item.score}` : ''}`,
-                url: item.url
-            }))
-            : [];
-
-        const devItems = devResult.status === 'fulfilled' && Array.isArray(devResult.value)
-            ? devResult.value.map(item => ({
-                category: 'DEV // TECH',
+        const devItems = devResult && Array.isArray(devResult)
+            ? devResult.map(item => ({
+                category: item.tag_list[0] ? `DEV // ${item.tag_list[0].toUpperCase()}` : 'DEV // TECH',
                 type: 'dev',
                 title: item.title,
+                description: item.description || 'Explora este artículo técnico en la red...',
+                image: item.cover_image || item.social_image || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=80',
+                date: new Date(item.published_at).toLocaleDateString('es-CO', { month: 'short', day: 'numeric' }),
                 url: item.url
             }))
             : [];
 
-        const max = Math.max(animeItems.length, devItems.length);
-        for (let i = 0; i < max; i++) {
-            if (animeItems[i]) this.items.push(animeItems[i]);
-            if (devItems[i]) this.items.push(devItems[i]);
-        }
+        this.items = devItems;
 
-        // Respaldo por si ambas APIs fallan o no hay internet
         if (this.items.length === 0) {
             this.items = [
-                { category: 'SYS // LOCAL', type: 'dev', title: 'Sin conexión a feeds externos. Revisa tu red.', url: '#' }
+                {
+                    category: 'SYS // LOCAL',
+                    type: 'dev',
+                    title: 'Sin conexión a feeds externos. Verifique su enlace de red.',
+                    description: 'Sistema operando en modo desconectado.',
+                    image: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=400&q=80',
+                    date: 'HOY',
+                    url: '#'
+                }
             ];
         }
 
@@ -83,11 +78,20 @@ export class NewsWidget {
 
         this.items.forEach((item, idx) => {
             const card = document.createElement('article');
-            card.className = 'news-card';
+            card.className = 'news-card-visual';
             card.innerHTML = `
-                <span class="news-badge ${item.type}">${item.category}</span>
-                <p class="news-title">${item.title}</p>
-                <a class="news-link" href="${item.url}" target="_blank" rel="noopener">ABRIR_ENLACE ↗</a>
+                <div class="news-thumb-container">
+                    <img src="${item.image}" alt="News thumb" class="news-thumb" loading="lazy">
+                    <span class="news-badge ${item.type}">${item.category}</span>
+                </div>
+                <div class="news-info">
+                    <div class="news-meta">
+                        <span class="news-date">${item.date}</span>
+                    </div>
+                    <h4 class="news-title-v2">${item.title}</h4>
+                    <p class="news-desc">${item.description}</p>
+                </div>
+                <a class="news-link-btn" href="${item.url}" target="_blank" rel="noopener">LEER_ARTÍCULO ↗</a>
             `;
             this.track.appendChild(card);
 
