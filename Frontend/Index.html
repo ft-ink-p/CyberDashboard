@@ -15,44 +15,72 @@
         </div>
         <div class="bar-right">
             <span>VOL 85%</span>
-            <span>NET: 何を探してるんだ、兄弟？</span>
+            <span>NET: 何を探してるんだ、兄弟?</span>
             <span>ES</span>
             <span id="mini-clock">00:00</span>
         </div>
     </header>
 
-    <!-- ÁREA PRINCIPAL DIVIDIDA EN 2 COLUMNAS ASIMÉTRICAS -->
+    <!-- ÁREA PRINCIPAL DIVIDIDA EN 2 COLUMNAS -->
     <main class="workspace">
 
-        <!-- MITAD IZQUIERDA: Monitores estilo TUI -->
+        <!-- COLUMNA IZQUIERDA -->
         <section class="col-left">
 
-            <!-- Fila 1: Notas -->
+            <!-- 1. MÓDULO DE NOTAS -->
             <fieldset class="tile" id="widget-cpu">
                 <legend>Notas</legend>
-                <div class="tile-content placeholder-text">
-                    [ Módulo Notas ]
+                <div class="notes-wrapper" id="notes-app">
+                    <div class="notes-toolbar">
+                        <button class="notebook-toggle" id="notebook-btn">📓 CUADERNO ▼</button>
+                        <div class="notes-pages" id="notes-pages-bar"></div>
+                        <button class="note-clear-btn" id="note-clear" title="Limpiar hoja actual">🗑</button>
+                    </div>
+                    <textarea
+                        class="cyber-textarea"
+                        id="note-editor"
+                        aria-label="Editor de notas"
+                        maxlength="350"
+                        placeholder="> Selecciona una hoja del cuaderno y escribe tus apuntes (máx. 350 caracteres)..."></textarea>
+                    <div class="notes-footer">
+                        <span id="note-status">SYNC: LOCAL_STORAGE</span>
+                        <span id="note-counter">0 / 350</span>
+                    </div>
                 </div>
             </fieldset>
 
-            <!-- Fila 2: Noticias y foto anime -->
+            <!-- FILA MEDIA: Noticias y GIF Anime -->
             <div class="row-mid">
+                <!-- 2. MÓDULO DE NOTICIAS -->
                 <fieldset class="tile" id="widget-disk">
                     <legend>Noticias</legend>
-                    <div class="tile-content placeholder-text">
-                        [ Modulo de Noticias]
+                    <div class="news-wrapper" id="news-app">
+                        <div class="news-carousel" id="news-track">
+                            <div class="placeholder-text">Sincronizando feeds frikis...</div>
+                        </div>
+                        <div class="news-nav">
+                            <button class="news-arrow" id="news-prev">◀</button>
+                            <div class="news-dots" id="news-dots"></div>
+                            <button class="news-arrow" id="news-next">▶</button>
+                        </div>
                     </div>
                 </fieldset>
 
+                <!-- 3. MÓDULO GIF ANIME DIFUMINADO -->
                 <fieldset class="tile" id="widget-ram">
-                    <legend> >__< </legend>
-                    <div class="tile-content placeholder-text">
-                        [ Foto Anime ]
+                    <legend>&gt;_&lt;</legend>
+                    <div class="anime-wrapper" id="anime-app">
+                        <img id="anime-img" class="anime-diffused loaded" src="assets/cyber1.gif" alt="Cyber Anime">
+                        <div class="anime-scanlines"></div>
+                        <div class="anime-overlay">
+                            <span id="anime-artist">SYS.LOOP // 01</span>
+                            <button class="anime-refresh" id="anime-next" title="Cambiar GIF">↻</button>
+                        </div>
                     </div>
                 </fieldset>
             </div>
 
-            <!-- Fila 3: Sensores + Red (izquierda) y Procesos (derecha) -->
+            <!-- FILA INFERIOR: Clima, Pacman y Gráfica -->
             <div class="row-bottom">
                 <div class="subcol-sensors">
                     <fieldset class="tile" id="widget-temp">
@@ -69,7 +97,7 @@
                         </div>
                     </fieldset>
                 </div>
-                    <!--Grafica interactiva del peso colombiano -->
+
                 <fieldset class="tile" id="widget-processes">
                     <legend>Grafica</legend>
                     <div class="tile-content placeholder-text">
@@ -80,10 +108,10 @@
 
         </section>
 
-        <!-- MITAD DERECHA: Terminal Neofetch + Reloj Gigante -->
+        <!-- COLUMNA DERECHA -->
         <section class="col-right">
 
-            <!-- Fila 1: Consola Neofetch -->
+            <!-- TERMINAL NEOFETCH -->
             <div class="tile terminal-tile" id="widget-terminal">
                 <div class="terminal-prompt">
                     <span class="prompt-user">by_Ink_dev</span>:~$ neofetch :b
@@ -93,19 +121,20 @@
                 </div>
             </div>
 
-            <!-- Fila 2: Reloj Digital Gigante -->
-         <div class="tile clock-tile" id="widget-clock">
-      <canvas id="analog-clock" width="190" height="190"></canvas>
-    <div class="clock-info">
-        <div class="big-time" id="clock-hours">00:00:00</div>
-        <div class="big-date" id="clock-date">CARGANDO FECHA...</div>
-        <div class="location-weather">
-            <span id="clock-location">📍 CARTAGENA, COLOMBIA</span>
-            <span class="separator">//</span>
-            <span id="clock-weather">🌡 --°C</span>
-        </div>
-    </div>
-</div>
+            <!-- RELOJ ANALÓGICO + DIGITAL + CLIMA -->
+            <div class="tile clock-tile" id="widget-clock">
+                <canvas id="analog-clock" width="190" height="190"></canvas>
+
+                <div class="clock-info">
+                    <div class="big-time" id="clock-hours">00:00:00</div>
+                    <div class="big-date" id="clock-date">CARGANDO FECHA...</div>
+                    <div class="location-weather">
+                        <span id="clock-location">📍 CARTAGENA, COLOMBIA</span>
+                        <span class="separator">//</span>
+                        <span id="clock-weather">🌡️ --°C</span>
+                    </div>
+                </div>
+            </div>
 
         </section>
 
@@ -120,12 +149,13 @@
             <span class="ws">4</span>
         </div>
         <div class="bar-right">
-            <span>🎱</span>
-            <span>🎧</span>
-            <span>🚬</span>
-            <span>🌃</span>
+            <span>HD 13GB FREE</span>
+            <span>RAM 4.0GB</span>
+            <span>CPU 12%</span>
+            <span>TEMP 48°C</span>
         </div>
     </footer>
+
     <script type="module" src="Main.js"></script>
 </body>
 </html>
