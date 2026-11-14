@@ -1,0 +1,118 @@
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+import httpx
+
+app = FastAPI(title="CyberOS Backend API")
+
+# Permitir peticiones desde el Frontend (PyCharm Live Server / localhost)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+CITIES = {
+    "cartagena": {"name": "Cartagena", "lat": 10.3910, "lon": -75.4794},
+    "bogota": {"name": "Bogotá", "lat": 4.7110, "lon": -74.0721},
+    "medellin": {"name": "Medellín", "lat": 6.2442, "lon": -75.5812},
+    "cali": {"name": "Cali", "lat": 3.4516, "lon": -76.5320},
+    "barranquilla": {"name": "Barranquilla", "lat": 10.9685, "lon": -74.7813},
+}
+
+
+def classify_weather(temp: float, humidity: int, code: int) -> dict:
+    # 1. Ícono y estado atmosférico principal
+    if code in (95, 96, 99):
+        sky_icon, sky_label = "⛈️", "TORMENTA ELÉCTRICA"
+    elif code in (80, 81, 82):
+        sky_icon, sky_label = "🌩️", "TORMENTA"
+    elif code in (51, 53, 55, 61, 63, 65):
+        sky_icon, sky_label = "🌧️", "LLUVIA"
+    elif code in (1, 2, 3, 45, 48):
+        sky_icon, sky_label = "☁️", "NUBLADO"
+    else:
+        sky_icon, sky_label = "☀️", "DESPEJADO"
+
+    # 2. Ícono y condición térmica / humedad
+    if temp >= 34:
+        thermal_icon, thermal_label = "🔥", "CALOR EXCESIVO"
+    elif temp >= 27:
+        thermal_icon, thermal_label = "🌡️", "CALOR"
+    elif temp <= 8:
+        thermal_icon, thermal_label = "🥶", "FRÍO EXCESIVO"
+    elif temp <= 15:
+        thermal_icon, thermal_label = "❄️", "FRÍO"
+    elif humidity >= 80:
+        thermal_icon, thermal_label = "💧", f"HUMEDAD {humidity}%"
+    else:
+        thermal_icon, thermal_label = "🍃", f"CONFORT {humidity}%"
+
+    return {
+        "sky_icon": sky_icon,
+        "sky_label": sky_label,
+        "thermal_icon": thermal_icon,
+        "thermal_label": thermal_label,
+    }
+
+
+@app.get("/api/weather/{city_key}")
+async def get_weather(city_key: str):
+    city = CITIES.get(city_key.lower())
+    if not city:
+        raise HTTPException(status_code=404, detail="Ciudad no soportada")
+
+    url = (
+        f"https://api.open-meteo.com/v1/forecast"
+        f"?latitude={city['lat']}&longitude={city['lon']}"
+        f"&current=temperature_2m,relative_humidity_2m,weather_code"
+    )
+
+    async with httpx.AsyncClient(timeout=8.0) as client:
+        res = await client.get(url)
+        data = res.json()
+
+    current = data["current"]
+    temp = round(current["temperature_2m"], 1)
+    humidity = int(current["relative_humidity_2m"])
+    code = int(current["weather_code"])
+
+    status = classify_weather(temp, humidity, code)
+
+    return {
+        "city": city["name"],
+        "temp": temp,
+        "humidity": humidity,
+        **status,
+    }
+
+
+@app.get("/api/currency")
+async def get_currency_rates():
+    # Consulta tasas reales frente al USD y calcula cuánto vale 1 unidad en COP
+    url = "https://open.er-api.com/v6/latest/USD"
+    async with httpx.AsyncClient(timeout=8.0) as client:
+        res = await client.get(url)
+        data = res.json()
+
+    rates = data["rates"]
+    cop_per_usd = rates["COP"]
+
+    # Valor en Pesos Colombianos (COP) de 1 USD, 1 EUR, 1 GBP, 1 BRL y 10 MXN
+    currencies = [
+        {"code": "USD", "name": "Dólar EEUU", "value_cop": round(cop_per_usd, 1)},
+        {"code": "EUR", "name": "Euro", "value_cop": round(cop_per_usd / rates["EUR"], 1)},
+        {"code": "GBP", "name": "Libra UK", "value_cop": round(cop_per_usd / rates["GBP"], 1)},
+        {"code": "BRL", "name": "Real BR (x5)", "value_cop": round((cop_per_usd / rates["BRL"]) * 5, 1)},
+        {"code": "MXN", "name": "Peso MX (x10)", "value_cop": round((cop_per_usd / rates["MXN"]) * 10, 1)},
+    ]
+
+    return {
+        "base": "COP",
+        "usd_cop": round(cop_per_usd, 2),
+        "currencies": currencies,
+    }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)

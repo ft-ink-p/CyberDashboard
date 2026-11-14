@@ -81,31 +81,63 @@
             </div>
 
             <!-- FILA INFERIOR: Clima, Pacman y Gráfica -->
+       <!-- FILA INFERIOR: Clima, Runner y Gráfica -->
             <div class="row-bottom">
                 <div class="subcol-sensors">
+                    <!-- 1. CLIMA CON PYTHON BACKEND -->
                     <fieldset class="tile" id="widget-temp">
                         <legend>Clima</legend>
-                        <div class="tile-content placeholder-text">
-                            [ Sensores °C ]
+                        <div class="weather-widget">
+                            <div class="weather-header">
+                                <select id="city-selector" class="cyber-select" aria-label="Seleccionar ciudad">
+                                    <option value="cartagena" selected>📍 CARTAGENA</option>
+                                    <option value="bogota">📍 BOGOTÁ</option>
+                                    <option value="medellin">📍 MEDELLÍN</option>
+                                    <option value="cali">📍 CALI</option>
+                                    <option value="barranquilla">📍 BARRANQUILLA</option>
+                                </select>
+                                <span class="weather-temp-big" id="w-temp">--°C</span>
+                            </div>
+                            <div class="weather-icons-row">
+                                <div class="w-badge">
+                                    <span class="w-emoji" id="w-sky-icon">⏳</span>
+                                    <span class="w-text" id="w-sky-text">CARGANDO</span>
+                                </div>
+                                <div class="w-badge">
+                                    <span class="w-emoji" id="w-therm-icon">🌡️</span>
+                                    <span class="w-text" id="w-therm-text">ESPERANDO</span>
+                                </div>
+                            </div>
                         </div>
                     </fieldset>
 
+                    <!-- 2. CYBER-RUNNER (ESTILO DINO) -->
                     <fieldset class="tile" id="widget-net">
-                        <legend>Pacman</legend>
-                        <div class="tile-content placeholder-text">
-                            [ Animacion de pacman ]
+                        <legend>Runner</legend>
+                        <div class="runner-wrapper">
+                            <canvas id="runner-canvas" width="240" height="95"></canvas>
+                            <div class="runner-hud">
+                                <span id="runner-mode">AUTO // CLICK PARA SALTAR</span>
+                                <span id="runner-score">HI 0000</span>
+                            </div>
                         </div>
                     </fieldset>
                 </div>
 
+                <!-- 3. GRÁFICA DE DIVISAS (COP BASE) -->
                 <fieldset class="tile" id="widget-processes">
-                    <legend>Grafica</legend>
-                    <div class="tile-content placeholder-text">
-                        [ Grafica ]
+                    <legend>Grafica // COP</legend>
+                    <div class="chart-wrapper">
+                        <div class="chart-header">
+                            <span>BASE: <strong>PESO COLOMBIANO (COP)</strong></span>
+                            <span id="chart-usd-ref" class="neon-tag">1 USD = -- COP</span>
+                        </div>
+                        <div class="chart-canvas-box">
+                            <canvas id="currency-chart"></canvas>
+                        </div>
                     </div>
                 </fieldset>
             </div>
-
         </section>
 
         <!-- COLUMNA DERECHA -->
@@ -155,7 +187,8 @@
             <span>TEMP 48°C</span>
         </div>
     </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="Main.js"></script>
     <script type="module" src="Main.js"></script>
 </body>
 </html>
