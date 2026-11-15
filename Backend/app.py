@@ -1,13 +1,18 @@
+from pathlib import Path
+import platform
+import threading
+import time
+import webbrowser
+
+import httpx
+import psutil
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-import httpx
-import platform
-import time
-import psutil
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI(title="CyberOS Backend API")
 
-# Permitir peticiones desde el Frontend (PyCharm Live Server / localhost)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -25,7 +30,6 @@ CITIES = {
 
 
 def classify_weather(temp: float, humidity: int, code: int) -> dict:
-    # 1. Ícono y estado atmosférico principal
     if code in (95, 96, 99):
         sky_icon, sky_label = "⛈️", "TORMENTA ELÉCTRICA"
     elif code in (80, 81, 82):
@@ -37,7 +41,6 @@ def classify_weather(temp: float, humidity: int, code: int) -> dict:
     else:
         sky_icon, sky_label = "☀️", "DESPEJADO"
 
-    # 2. Ícono y condición térmica / humedad
     if temp >= 34:
         thermal_icon, thermal_label = "🔥", "CALOR EXCESIVO"
     elif temp >= 27:
@@ -92,7 +95,6 @@ async def get_weather(city_key: str):
 
 @app.get("/api/currency")
 async def get_currency_rates():
-    # Consulta tasas reales frente al USD y calcula cuánto vale 1 unidad en COP
     url = "https://open.er-api.com/v6/latest/USD"
     async with httpx.AsyncClient(timeout=8.0) as client:
         res = await client.get(url)
@@ -101,7 +103,6 @@ async def get_currency_rates():
     rates = data["rates"]
     cop_per_usd = rates["COP"]
 
-    # Valor en Pesos Colombianos (COP) de 1 USD, 1 EUR, 1 GBP, 1 BRL y 10 MXN
     currencies = [
         {"code": "USD", "name": "Dólar EEUU", "value_cop": round(cop_per_usd, 1)},
         {"code": "EUR", "name": "Euro", "value_cop": round(cop_per_usd / rates["EUR"], 1)},
@@ -115,6 +116,8 @@ async def get_currency_rates():
         "usd_cop": round(cop_per_usd, 2),
         "currencies": currencies,
     }
+
+
 @app.get("/api/sysinfo")
 async def get_system_info():
     ram = psutil.virtual_memory()
@@ -136,6 +139,20 @@ async def get_system_info():
     }
 
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+FRONTEND_DIR = BASE_DIR / "Frontend"
+
+
+@app.get("/")
+async def serve_dashboard():
+    return FileResponse(FRONTEND_DIR / "Index.html")
+
+
+app.mount("/", StaticFiles(directory=str(FRONTEND_DIR)), name="frontend")
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("app:app", host="127.0.0.1", port=8000, reload=True)
+
+    threading.Timer(1.2, lambda: webbrowser.open("http://127.0.0.1:8000")).start()
+    uvicorn.run(app, host="127.0.0.1", port=8000)
