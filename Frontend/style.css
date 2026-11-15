@@ -779,3 +779,160 @@ fieldset.tile legend {
     width: 100%;
     min-height: 185px;
 }
+/* =========================================
+   TERMINAL
+   ========================================= */
+.terminal-tile {
+    flex: 1;
+    min-height: 235px;
+    max-height: 275px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+    overflow: hidden;
+}
+
+.terminal-header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed rgba(0, 240, 255, 0.25);
+    padding-bottom: 5px;
+    gap: 8px;
+}
+
+.term-mode-btns {
+    display: flex;
+    gap: 4px;
+}
+
+.term-btn {
+    background: rgba(0, 240, 255, 0.06);
+    border: 1px solid #1e6b7b;
+    color: var(--text-dim);
+    font-family: inherit;
+    font-size: 0.62rem;
+    padding: 2px 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.term-btn:hover,
+.term-btn.active {
+    background: rgba(0, 240, 255, 0.18);
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.25);
+}
+
+.terminal-stage {
+    position: relative;
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Vista Neofetch ASCII + Specs */
+.neofetch-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 0 6px;
+}
+
+.ascii-art {
+    color: var(--neon-cyan);
+    font-size: 0.62rem;
+    line-height: 1.15;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.35);
+    user-select: none;
+}
+
+.sys-specs {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 0.72rem;
+}
+
+.spec-title {
+    color: var(--neon-green);
+    font-weight: bold;
+    margin-bottom: 2px;
+}
+
+.spec-key {
+    color: var(--neon-cyan);
+    font-weight: bold;
+}
+
+.spec-val {
+    color: var(--text-main);
+}
+
+.color-palette-bar {
+    display: flex;
+    gap: 4px;
+    margin-top: 5px;
+}
+
+.color-swatch {
+    width: 14px;
+    height: 8px;
+    display: inline-block;
+}
+
+/* Canvas para 3D, Snake y Matrix */
+.terminal-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+.stage-hud-overlay {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 0.65rem;
+    color: var(--neon-green);
+    background: rgba(3, 6, 10, 0.75);
+    border: 1px solid rgba(0, 255, 102, 0.35);
+    padding: 2px 6px;
+    pointer-events: none;
+}
+
+/* Línea inferior escribible */
+.terminal-input-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-top: 1px dashed rgba(0, 240, 255, 0.25);
+    padding-top: 4px;
+}
+
+.prompt-arrow {
+    color: var(--neon-green);
+    font-weight: bold;
+    font-size: 0.8rem;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 0.72rem;
+}
+
+.terminal-input::placeholder {
+    color: #46636d;
+}

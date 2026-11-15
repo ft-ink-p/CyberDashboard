@@ -1,6 +1,9 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
+import platform
+import time
+import psutil
 
 app = FastAPI(title="CyberOS Backend API")
 
@@ -112,6 +115,26 @@ async def get_currency_rates():
         "usd_cop": round(cop_per_usd, 2),
         "currencies": currencies,
     }
+@app.get("/api/sysinfo")
+async def get_system_info():
+    ram = psutil.virtual_memory()
+    disk = psutil.disk_usage("/")
+    cpu_percent = psutil.cpu_percent(interval=0.1)
+    uptime_sec = int(time.time() - psutil.boot_time())
+    hours, remainder = divmod(uptime_sec, 3600)
+    minutes, _ = divmod(remainder, 60)
+
+    return {
+        "os": f"{platform.system()} {platform.release()}",
+        "arch": platform.machine(),
+        "python": platform.python_version(),
+        "cpu_cores": psutil.cpu_count(logical=True),
+        "cpu_usage": f"{cpu_percent}%",
+        "ram": f"{round(ram.used / (1024**3), 1)}GB / {round(ram.total / (1024**3), 1)}GB ({ram.percent}%)",
+        "disk_free": f"{round(disk.free / (1024**3), 1)}GB FREE",
+        "uptime": f"{hours}h {minutes}m",
+    }
+
 
 if __name__ == "__main__":
     import uvicorn

@@ -143,16 +143,35 @@
         <!-- COLUMNA DERECHA -->
         <section class="col-right">
 
-            <!-- TERMINAL NEOFETCH -->
+    <!-- TERMINAL HÍBRIDA INTERACTIVA -->
             <div class="tile terminal-tile" id="widget-terminal">
-                <div class="terminal-prompt">
-                    <span class="prompt-user">by_Ink_dev</span>:~$ neofetch :b
+                <div class="terminal-header-bar">
+                    <div class="terminal-prompt">
+                        <span class="prompt-user">by_Ink_dev</span>:~$ <span id="term-active-cmd">neofetch :b</span>
+                    </div>
+                    <div class="term-mode-btns">
+                        <button class="term-btn active" data-cmd="neofetch">ASCII</button>
+                        <button class="term-btn" data-cmd="3d">3D_HOLO</button>
+                        <button class="term-btn" data-cmd="snake">SNAKE</button>
+                        <button class="term-btn" data-cmd="matrix">MATRIX</button>
+                    </div>
                 </div>
-                <div class="tile-content placeholder-text">
-                    [ Aquí irá el Arte ASCII + Especificaciones del Sistema ]
+
+                <!-- Escenario dinámico (ASCII / Canvas 3D / Canvas Juego) -->
+                <div class="terminal-stage" id="terminal-stage"></div>
+
+                <!-- Línea de comandos escribible -->
+                <div class="terminal-input-row">
+                    <span class="prompt-arrow">&gt;</span>
+                    <input
+                        type="text"
+                        id="terminal-input"
+                        class="terminal-input"
+                        autocomplete="off"
+                        spellcheck="false"
+                        placeholder="Escribe un comando: neofetch, 3d, snake, matrix, help...">
                 </div>
             </div>
-
             <!-- RELOJ ANALÓGICO + DIGITAL + CLIMA -->
             <div class="tile clock-tile" id="widget-clock">
                 <canvas id="analog-clock" width="190" height="190"></canvas>
@@ -189,6 +208,9 @@
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="Main.js"></script>
+    <script type="module" src="Main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="Main.js"></script>
 </body>
 </html>

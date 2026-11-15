@@ -5,6 +5,7 @@ import { AnimeWidget } from './modules/AnimeWidget.js';
 import { WeatherWidget } from './modules/WeatherWidget.js';
 import { ChartWidget } from './modules/ChartWidget.js';
 import { RunnerWidget } from './modules/RunnerWidget.js';
+import { TerminalWidget } from './modules/TerminalWidget.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const widgets = [
@@ -19,7 +20,8 @@ document.addEventListener('DOMContentLoaded', () => {
         () => new AnimeWidget().init(),
         () => new WeatherWidget().init(),
         () => new ChartWidget().init(),
-        () => new RunnerWidget().init()
+        () => new RunnerWidget().init(),
+        () => new TerminalWidget().init()
     ];
 
     widgets.forEach((initWidget) => {
